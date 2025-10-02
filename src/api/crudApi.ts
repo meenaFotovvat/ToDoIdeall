@@ -7,9 +7,9 @@ import { api } from "./axios";
 export const fetchTasks = (
   query: TaskQueryParams
 ) =>
-  api.get(
-    `/todos/get?page=${query.page}&limit=${query.limit}&sort=${query.sort}&order=${query.order}&title=${query.title}&description=${query.description}&is_completed=${query.is_completed}&start_date=${query.start_date}&end_date=${query.end_date}`
-  );
+  api.get(`/todos/get`, {
+    params: query, // Axios will only include defined keys
+  });
 
 export const createTask = (data: TaskCreateDTO) =>
   api.post("todos/", data);
