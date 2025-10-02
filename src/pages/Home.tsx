@@ -5,6 +5,7 @@ import {
 } from "../app/hooks";
 import TopBar from "../components/TopBar";
 import { fetchTasks } from "../features/tasks/taskSlice";
+import TaskList from "../features/tasks/components/TaskList";
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -20,21 +21,7 @@ export default function Home() {
     <div className="m-[75px]">
       <TopBar />
       {loading && <p>Loading...</p>}
-      <ul className="mt-4 space-y-2">
-        {tasks?.map((task) => (
-          <li
-            key={task.id}
-            className="p-3 border rounded-md bg-white"
-          >
-            <p className="font-semibold">
-              {task?.title}
-            </p>
-            <p className="text-sm text-gray-600">
-              {task?.description}
-            </p>
-          </li>
-        ))}
-      </ul>
+      <TaskList tasks={tasks} />
     </div>
   );
 }
