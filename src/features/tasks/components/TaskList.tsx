@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { TaskCreateDTO } from "../../../types/taskTypes";
 import {
   Card,
@@ -12,7 +13,9 @@ interface TaskListProps {
 export default function TaskList({
   tasks,
 }: TaskListProps) {
-  if (tasks.length === 0) {
+  const navigate = useNavigate();
+
+  if (tasks?.length === 0) {
     return (
       <p className="text-gray-500">
         No tasks yet.
@@ -25,7 +28,10 @@ export default function TaskList({
       {tasks?.map((task) => (
         <Card
           key={task?.id}
-          className="shadow-md"
+          className="shadow-md cursor-pointer hover:bg-gray-50"
+          onClick={() =>
+            navigate(`/tasks/${task?.id}`)
+          }
         >
           <CardContent>
             <Typography variant="h6">

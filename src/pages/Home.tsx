@@ -10,7 +10,7 @@ import TaskList from "../features/tasks/components/TaskList";
 export default function Home() {
   const dispatch = useAppDispatch();
   const { tasks, loading } = useAppSelector(
-    (state) => state.task
+    (state) => state?.task
   );
 
   useEffect(() => {
