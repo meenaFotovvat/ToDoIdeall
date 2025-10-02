@@ -27,6 +27,8 @@ export interface TaskQueryParams {
   is_completed?: boolean;
   start_date?: string;
   end_date?: string;
+  status?: string;
+  search?: string; // ✅ for title search
 }
 
 export interface TaskState {
@@ -48,4 +50,9 @@ export interface TaskState {
     sortBy: string;
     sortOrder: "asc" | "desc";
   };
+}
+
+export interface TAddTaskDialogProps {
+  open: boolean;
+  onClose: () => void;
 }
