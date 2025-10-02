@@ -27,10 +27,10 @@ export default function TaskList({
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-4">
       {tasks?.map((task) => (
         <Card
-          key={task?.id}
+          key={task?._id}
           className="shadow-md cursor-pointer hover:bg-gray-50"
           onClick={() =>
-            navigate(`/tasks/${task?.id}`)
+            navigate(`/tasks/${task?._id}`)
           }
         >
           <CardContent>

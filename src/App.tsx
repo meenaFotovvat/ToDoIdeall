@@ -14,9 +14,9 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<Home />}></Route>
           <Route
-            path="task/:id"
+            path="tasks/:id"
             element={<TaskDetailsPage />}
-          ></Route>
+          />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 // API-facing shapes (match the backend data)
 export interface TaskCreateDTO {
-  id?: string;
+  _id?: string;
   title: string;
   description: string;
   start_date: string;

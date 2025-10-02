@@ -18,7 +18,7 @@ export default function TaskDetailsPage() {
     (state) => state.task
   );
   const task = tasks.find(
-    (task) => task?.id === id
+    (task) => task?._id === id
   );
 
   useEffect(() => {
@@ -29,11 +29,13 @@ export default function TaskDetailsPage() {
 
   if (!task)
     return (
-      <p className="text-gray-500">Loading...</p>
+      <p className="text-gray-500 mt-[75px]">
+        Loading...
+      </p>
     );
 
   return (
-    <Card className="max-w-md mx-auto mt-8 shadow-md">
+    <Card className="max-w-md mx-auto shadow-md mt-[75px]">
       <CardContent>
         <Typography variant="h5">
           {task?.title}
