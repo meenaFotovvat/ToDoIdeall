@@ -1,12 +1,24 @@
-import './App.css'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import TaskDetailsPage from "./pages/TaskDetailsPage";
 
-function App() {
-
+export default function App() {
   return (
-    <main>
-      
-    </main>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />}></Route>
+          <Route
+            path="task/:id"
+            element={<TaskDetailsPage />}
+          ></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
