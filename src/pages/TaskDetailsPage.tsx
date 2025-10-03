@@ -96,10 +96,22 @@ export default function TaskDetailsPage() {
 
   // Update task
   const handleUpdate = () => {
+    if (
+      !editableTask.title.trim() ||
+      !editableTask.description.trim()
+    )
+      return;
+    const payload = {
+      title: editableTask.title,
+      description: editableTask.description,
+      start_date: editableTask.start_date,
+      end_date: editableTask.end_date,
+      is_completed: editableTask.completed,
+    };
     dispatch(
       updateTask({
         id: task._id || "",
-        data: editableTask,
+        data: payload,
       })
     );
     navigate("/"); // Go back to home
@@ -173,6 +185,10 @@ export default function TaskDetailsPage() {
           variant="contained"
           color="primary"
           onClick={handleUpdate}
+          disabled={
+            !editableTask.title.trim() ||
+            !editableTask.description.trim()
+          }
         >
           Save
         </Button>
