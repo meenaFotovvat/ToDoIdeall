@@ -4,7 +4,6 @@ import {
   useAppSelector,
 } from "../app/hooks";
 import {
-  fetchTasks,
   setIsCompleted,
   setPage,
   setSearch,
@@ -26,7 +25,7 @@ import AddTaskDialog from "../features/tasks/components/AddTaskDialog";
 
 export default function TopBar() {
   const dispatch = useAppDispatch();
-  const { pagination, filters } = useAppSelector(
+  const { filters } = useAppSelector(
     (s) => s.task
   );
   const [searchTerm, setSearchTerm] = useState(
@@ -47,12 +46,7 @@ export default function TopBar() {
     e: SelectChangeEvent
   ) => {
     dispatch(setSortBy(e.target.value as string));
-    triggerFetch(
-      searchTerm,
-      e.target.value as string,
-      filters.sortOrder,
-      completedFilter
-    );
+    dispatch(setPage(1));
   };
 
   const handleSortOrderChange = (
@@ -62,12 +56,7 @@ export default function TopBar() {
   ) => {
     if (!value) return;
     dispatch(setSortOrder(value));
-    triggerFetch(
-      searchTerm,
-      filters.sortBy,
-      value,
-      completedFilter
-    );
+    dispatch(setPage(1));
   };
 
   const handleCompletedChange = (
@@ -80,65 +69,14 @@ export default function TopBar() {
         : val === "completed";
     setCompletedFilter(val);
     dispatch(setIsCompleted(mapped));
-    triggerFetch(
-      searchTerm,
-      filters.sortBy,
-      filters.sortOrder,
-      val
-    );
-  };
-
-  const triggerFetch = (
-    search: string,
-    sortBy: string,
-    sortOrder: "asc" | "desc",
-    completed: string
-  ) => {
-    const mappedCompleted =
-      completed === "all"
-        ? undefined
-        : completed === "completed";
-    // Reset to page 1 when searching or filtering
     dispatch(setPage(1));
-    dispatch(
-      fetchTasks({
-        page: 1,
-        limit: pagination.limit,
-        title: search, // Use title parameter for title search
-        sort: mapSortKey(sortBy),
-        order: sortOrder,
-        is_completed: mappedCompleted,
-      })
-    );
-  };
-
-  const mapSortKey = (key: string) => {
-    if (
-      key === "createdAt" ||
-      key === "updatedAt"
-    )
-      return key;
-    if (
-      key === "title" ||
-      key === "description" ||
-      key === "start_date" ||
-      key === "end_date" ||
-      key === "is_completed"
-    )
-      return key;
-    return "createdAt";
   };
 
   // Debounce search
   useEffect(() => {
     const handler = setTimeout(() => {
       dispatch(setSearch(searchTerm));
-      triggerFetch(
-        searchTerm,
-        filters.sortBy,
-        filters.sortOrder,
-        completedFilter
-      );
+      dispatch(setPage(1));
     }, 400);
     return () => clearTimeout(handler);
   }, [

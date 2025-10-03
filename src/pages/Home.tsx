@@ -30,7 +30,7 @@ export default function Home() {
         page: pagination.page,
         limit: pagination.limit,
         title: filters.search, // title search
-        sort: filters.sortBy,
+        sort: mapSortKey(filters.sortBy),
         order: filters.sortOrder,
         is_completed: filters.isCompleted,
       })
@@ -44,6 +44,23 @@ export default function Home() {
     filters.sortOrder,
     filters.isCompleted,
   ]);
+
+  const mapSortKey = (key: string) => {
+    if (
+      key === "createdAt" ||
+      key === "updatedAt"
+    )
+      return key;
+    if (
+      key === "title" ||
+      key === "description" ||
+      key === "start_date" ||
+      key === "end_date" ||
+      key === "is_completed"
+    )
+      return key;
+    return "createdAt";
+  };
 
   const handlePageChange = (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
