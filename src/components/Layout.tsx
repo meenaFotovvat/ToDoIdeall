@@ -24,6 +24,7 @@ export default function Layout() {
           <IconButton
             edge="start"
             onClick={() => setOpen(true)}
+            className="md:!hidden"
           >
             <MenuIcon />
           </IconButton>
