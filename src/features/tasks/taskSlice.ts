@@ -129,7 +129,44 @@ export const getTaskById = createAsyncThunk(
 const taskSlice = createSlice({
   name: "task",
   initialState,
-  reducers: {},
+  reducers: {
+    setPage: (
+      state,
+      action: PayloadAction<number>
+    ) => {
+      state.pagination.page = action.payload;
+    },
+    setLimit: (
+      state,
+      action: PayloadAction<number>
+    ) => {
+      state.pagination.limit = action.payload;
+    },
+    setSearch: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.filters.search = action.payload;
+    },
+    setSortBy: (
+      state,
+      action: PayloadAction<string>
+    ) => {
+      state.filters.sortBy = action.payload;
+    },
+    setSortOrder: (
+      state,
+      action: PayloadAction<"asc" | "desc">
+    ) => {
+      state.filters.sortOrder = action.payload;
+    },
+    setIsCompleted: (
+      state,
+      action: PayloadAction<boolean | undefined>
+    ) => {
+      state.filters.isCompleted = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     // Fetch
     builder.addCase(
@@ -145,6 +182,37 @@ const taskSlice = createSlice({
         state.loading = false;
         state.tasks =
           action.payload.data || action.payload;
+        const payload = action.payload;
+
+        // Handle API response format: {data: [], meta: {...}}
+        if (payload?.data) {
+          state.tasks = payload.data;
+          const meta = payload.meta;
+          if (meta) {
+            state.pagination.page =
+              meta.page ?? state.pagination.page;
+            state.pagination.limit =
+              meta.limit ??
+              state.pagination.limit;
+            state.pagination.total =
+              meta.total ??
+              state.pagination.total;
+            state.pagination.totalPages =
+              meta.totalPages ??
+              state.pagination.totalPages;
+            state.pagination.hasNextPage =
+              meta.hasNextPage ??
+              state.pagination.hasNextPage;
+            state.pagination.hasPrevPage =
+              meta.hasPrevPage ??
+              state.pagination.hasPrevPage;
+          }
+        } else if (Array.isArray(payload)) {
+          // Fallback for array responses
+          state.tasks = payload;
+        } else {
+          state.tasks = [];
+        }
       }
     );
     builder.addCase(
@@ -165,7 +233,8 @@ const taskSlice = createSlice({
         action: PayloadAction<TaskCreateDTO>
       ) => {
         const index = state.tasks.findIndex(
-          (task) => task?.id === action.payload.id
+          (task) =>
+            task?._id === action.payload._id
         );
         if (index !== -1)
           state.tasks[index] = action.payload;
@@ -177,7 +246,7 @@ const taskSlice = createSlice({
       deleteTask.fulfilled,
       (state, action: PayloadAction<string>) => {
         state.tasks = state.tasks.filter(
-          (task) => task?.id !== action.payload
+          (task) => task?._id !== action.payload
         );
       }
     );
