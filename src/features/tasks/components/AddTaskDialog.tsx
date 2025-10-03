@@ -72,6 +72,7 @@ export default function AddTaskDialog({
       <DialogTitle>Add New Task</DialogTitle>
       <DialogContent className="flex flex-col gap-4 mt-2">
         <TextField
+          className="!mt-5"
           label="Title"
           fullWidth
           value={title}
