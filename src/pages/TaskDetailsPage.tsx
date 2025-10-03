@@ -20,6 +20,7 @@ import {
   deleteTask,
   getTaskById,
   updateTask,
+  fetchTasks,
 } from "../features/tasks/taskSlice";
 
 export default function TaskDetailsPage() {
@@ -31,6 +32,10 @@ export default function TaskDetailsPage() {
     state.task.tasks.find(
       (task) => task._id === id
     )
+  );
+
+  const { pagination, filters } = useAppSelector(
+    (s) => s.task
   );
 
   const [editableTask, setEditableTask] =
@@ -95,7 +100,7 @@ export default function TaskDetailsPage() {
   };
 
   // Update task
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     if (
       !editableTask.title.trim() ||
       !editableTask.description.trim()
@@ -108,19 +113,50 @@ export default function TaskDetailsPage() {
       end_date: editableTask.end_date,
       is_completed: editableTask.completed,
     };
-    dispatch(
-      updateTask({
-        id: task._id || "",
-        data: payload,
-      })
-    );
-    navigate("/"); // Go back to home
+    try {
+      await dispatch(
+        updateTask({
+          id: task._id || "",
+          data: payload,
+        })
+      ).unwrap();
+      // Refresh list with current filters so the change appears immediately
+      dispatch(
+        fetchTasks({
+          page: pagination.page,
+          limit: pagination.limit,
+          title: filters.search,
+          sort: filters.sortBy,
+          order: filters.sortOrder,
+          is_completed: filters.isCompleted,
+        })
+      );
+      navigate("/"); // Go back to home
+    } catch {
+      // to do - no-op; could show toast in future
+    }
   };
 
   // Delete task
-  const handleDelete = () => {
-    dispatch(deleteTask(task._id || ""));
-    navigate("/"); // Go back to home after deletion
+  const handleDelete = async () => {
+    try {
+      await dispatch(
+        deleteTask(task._id || "")
+      ).unwrap();
+      // Refresh list with current filters so pagination recalculates
+      dispatch(
+        fetchTasks({
+          page: pagination.page,
+          limit: pagination.limit,
+          title: filters.search,
+          sort: filters.sortBy,
+          order: filters.sortOrder,
+          is_completed: filters.isCompleted,
+        })
+      );
+    } finally {
+      navigate("/");
+    }
   };
 
   return (

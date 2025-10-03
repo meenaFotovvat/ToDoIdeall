@@ -86,9 +86,14 @@ export default function Home() {
               label="Per Page"
               value={pagination.limit}
               onChange={(e) =>
-                dispatch(
-                  setLimit(Number(e.target.value))
-                )
+                (async () => {
+                  dispatch(setPage(1));
+                  dispatch(
+                    setLimit(
+                      Number(e.target.value)
+                    )
+                  );
+                })()
               }
             >
               <MenuItem value={5}>5</MenuItem>

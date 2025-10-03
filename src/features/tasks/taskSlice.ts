@@ -228,16 +228,16 @@ const taskSlice = createSlice({
     // Update
     builder.addCase(
       updateTask.fulfilled,
-      (
-        state,
-        action: PayloadAction<TaskCreateDTO>
-      ) => {
+      (state, action: PayloadAction<any>) => {
+        const updated =
+          action?.payload?.data ?? action.payload;
+        const id = updated?._id;
+        if (!id) return;
         const index = state.tasks.findIndex(
-          (task) =>
-            task?._id === action.payload._id
+          (task) => task?._id === id
         );
         if (index !== -1)
-          state.tasks[index] = action.payload;
+          state.tasks[index] = updated;
       }
     );
 

@@ -14,16 +14,24 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { type TAddTaskDialogProps } from "../../../types/taskTypes";
 import { useState } from "react";
-import { useAppDispatch } from "../../../app/hooks";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../app/hooks";
 import {
   createTask,
   fetchTasks,
+  setPage,
 } from "../taskSlice";
 
 export default function AddTaskDialog({
   open,
   onClose,
 }: TAddTaskDialogProps) {
+  const { pagination, filters } = useAppSelector(
+    (s) => s.task
+  );
+
   const dispatch = useAppDispatch();
 
   const [title, setTitle] = useState("");
@@ -62,8 +70,18 @@ export default function AddTaskDialog({
       })
     );
 
-    // Refresh list
-    dispatch(fetchTasks({ page: 1, limit: 10 }));
+    // Reset to page 1 and refresh list with current filters
+    dispatch(setPage(1));
+    dispatch(
+      fetchTasks({
+        page: 1,
+        limit: pagination.limit,
+        title: filters.search,
+        sort: filters.sortBy,
+        order: filters.sortOrder,
+        is_completed: filters.isCompleted,
+      })
+    );
 
     // reset form
     setTitle("");
