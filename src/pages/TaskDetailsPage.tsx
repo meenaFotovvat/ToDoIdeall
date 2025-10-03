@@ -145,7 +145,6 @@ export default function TaskDetailsPage() {
         onChange={handleChange}
         fullWidth
         margin="normal"
-        InputLabelProps={{ shrink: true }}
       />
 
       <TextField
@@ -156,7 +155,6 @@ export default function TaskDetailsPage() {
         onChange={handleChange}
         fullWidth
         margin="normal"
-        InputLabelProps={{ shrink: true }}
       />
 
       <FormControlLabel
