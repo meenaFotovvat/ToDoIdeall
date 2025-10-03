@@ -254,3 +254,11 @@ const taskSlice = createSlice({
 });
 
 export default taskSlice.reducer;
+export const {
+  setPage,
+  setLimit,
+  setSearch,
+  setSortBy,
+  setSortOrder,
+  setIsCompleted,
+} = taskSlice.actions;

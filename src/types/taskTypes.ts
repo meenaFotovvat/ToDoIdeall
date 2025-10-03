@@ -13,14 +13,7 @@ export type SortOrder = "asc" | "desc";
 export interface TaskQueryParams {
   page?: number;
   limit?: number;
-  sort?:
-    | "title"
-    | "description"
-    | "start_date"
-    | "end_date"
-    | "createdAt"
-    | "updatedAt"
-    | "is_completed";
+  sort?: string;
   order?: SortOrder;
   description?: string;
   title?: string;
