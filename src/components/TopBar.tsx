@@ -56,6 +56,7 @@ export default function TopBar() {
   };
 
   const handleSortOrderChange = (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     _: any,
     value: "asc" | "desc" | null
   ) => {
