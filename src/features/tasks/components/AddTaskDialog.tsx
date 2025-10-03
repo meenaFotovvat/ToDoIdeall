@@ -33,9 +33,21 @@ export default function AddTaskDialog({
     useState<Dayjs | null>(dayjs());
   const [endDate, setEndDate] =
     useState<Dayjs | null>(dayjs());
+  const [titleError, setTitleError] =
+    useState("");
+  const [descError, setDescError] = useState("");
 
   const handleSave = async () => {
     if (!title) return;
+    const hasTitle = title.trim().length > 0;
+    const hasDesc = description.trim().length > 0;
+    setTitleError(
+      hasTitle ? "" : "Title is required"
+    );
+    setDescError(
+      hasDesc ? "" : "Description is required"
+    );
+    if (!hasTitle || !hasDesc) return;
 
     await dispatch(
       createTask({
@@ -58,6 +70,8 @@ export default function AddTaskDialog({
     setDescription("");
     setStartDate(dayjs());
     setEndDate(dayjs());
+    setTitleError("");
+    setDescError("");
 
     onClose();
   };
@@ -76,9 +90,14 @@ export default function AddTaskDialog({
           label="Title"
           fullWidth
           value={title}
-          onChange={(e) =>
-            setTitle(e?.target?.value)
-          }
+          required
+          error={Boolean(titleError)}
+          helperText={titleError || ""}
+          onChange={(e) => {
+            setTitle(e?.target?.value);
+            if (e.target.value.trim())
+              setTitleError("");
+          }}
         />
         <TextField
           label="Description"
@@ -86,9 +105,14 @@ export default function AddTaskDialog({
           multiline
           rows={3}
           value={description}
-          onChange={(e) =>
-            setDescription(e.target.value)
-          }
+          required
+          error={Boolean(descError)}
+          helperText={descError || ""}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            if (e.target.value.trim())
+              setDescError("");
+          }}
         />
         <LocalizationProvider
           dateAdapter={AdapterDayjs}
@@ -119,6 +143,9 @@ export default function AddTaskDialog({
           onClick={handleSave}
           variant="contained"
           color="primary"
+          disabled={
+            !title.trim() || !description.trim()
+          }
         >
           Save
         </Button>
